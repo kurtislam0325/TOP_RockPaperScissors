@@ -19,7 +19,6 @@ function getComputerChoice() {
 }
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
     let winner = "none";
 
     if (playerSelection === computerSelection) {
@@ -45,7 +44,19 @@ function game() {
         playerSelection = window.prompt("Rock, Paper, Scissors!");
         computerSelection = getComputerChoice();
 
-        if (playerSelection === null) break;
+        // case-sensitive testing
+        playerSelection = playerSelection.toLowerCase();
+        playerSelection = playerSelection.trim();
+        console.log(playerSelection);
+        if (playerSelection === null)
+            break;
+        else {
+            while (true) {
+                playerSelection = window.prompt("Rock, Paper, Scissors! *Please type the correct words");
+                if (playerSelection === "rock" || playerSelection === "paper" || playerSelection === "scissors")
+                    break;
+            }
+        }
 
         result = playRound(playerSelection, computerSelection);
 
