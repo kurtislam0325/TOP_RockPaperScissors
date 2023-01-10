@@ -3,6 +3,10 @@
 let playerSelection;
 let computerSelection;
 
+let playerScore = 0;
+let computerScore = 0;
+let round = 0;
+
 function getComputerChoice() {
     let computerChoice = "rock";
     let randomNumber = Math.floor(Math.random() * 100);
@@ -31,57 +35,65 @@ function playRound(playerSelection, computerSelection) {
         winner = "computer";
     }
 
-    return winner;
+    console.log(winner);
+    game(winner);
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-
-    let result = "none";
-    for (let i = 0; i < 5; i++) {
-
-        playerSelection = window.prompt("Rock, Paper, Scissors!");
-        computerSelection = getComputerChoice();
-
-        // case-sensitive testing
-        playerSelection = playerSelection.toLowerCase();
-        playerSelection = playerSelection.trim();
-        console.log(playerSelection);
-        if (playerSelection === null)
-            break;
-        else {
-            while (true) {
-                playerSelection = window.prompt("Rock, Paper, Scissors! *Please type the correct words");
-                if (playerSelection === "rock" || playerSelection === "paper" || playerSelection === "scissors")
-                    break;
-            }
-        }
-
-        result = playRound(playerSelection, computerSelection);
-
-        console.log(`Round ${i+1}: `);
-        console.log(`Player: ${playerSelection}\tComputer: ${computerSelection}`);
-        if (result === "player") {
-            playerScore++;
-            console.log("Player Wins!");
-        } else if (result === "computer") {
-            computerScore++;
-            console.log("Computer Wins!");
-        } else if (result === "none") {
-            console.log("It's a Tie");
-        }
-
-        console.log(`Player: ${playerScore}\tComputer: ${computerScore}`);
-    }
-
+function reset() {
+    let body = document.querySelector('body');
+    let announcement = document.createElement('div');
+    body.appendChild(announcement);
+    
     if (playerScore > computerScore) {
-        console.log("You is the FINAL WINNER!")
+        announcement.textContent = "Result: You is the FINAL WINNER!";
     } else if (playerScore < computerScore) {
-        console.log("Computer is the FINAL WINNER!")
+        announcement.textContent = "Result: Computer is the FINAL WINNER!";
     } else if (playerScore == computerScore) {
-        console.log("There is no winner :(")
+        announcement.textContent = "Result: There is no winner :(";
     }
+
+    playerScore = computerScore = round = 0;
 }
+
+function game(result) {
+    const roundContainer = document.querySelector(".round");
+    const playerScoreC = document.querySelector(".playerScore");
+    const computerScoreC = document.querySelector(".computerScore");
+
+    // console.log(`Round ${i+1}: `);
+    console.log(`Player: ${playerSelection}\tComputer: ${computerSelection}`);
+    if (result === "player") {
+        playerScore++;
+        round++;
+        roundContainer.textContent = `Round ${round}: Player Wins!`;
+        playerScoreC.textContent = `${playerScore}`;
+    } else if (result === "computer") {
+        computerScore++;
+        round++;
+        roundContainer.textContent = `Round ${round}: Computer Wins!`;
+        computerScoreC.textContent = `${computerScore}`;
+    } else if (result === "none") {
+        round++;
+        roundContainer.textContent = `Round ${round}: It's a Tie!`;
+    }
+
+    // console.log(`Player: ${playerScore}\tComputer: ${computerScore}`);
+
+    if (playerScore == 5 || computerScore == 5) 
+        reset();
+}
+
+const buttons = document.querySelectorAll('.choice');
+console.log(buttons);
+
+buttons.forEach(button => 
+    button.addEventListener('click', function() {
+        console.log(button.getAttribute("id"));
+        playRound(button.getAttribute("id"), getComputerChoice());
+    })
+);
+    
+const resetButton = document.querySelector(".reset");
+resetButton.addEventListener('click',reset);
 
 game();
